@@ -1,0 +1,32 @@
+<div class="display header">
+    <div class="text">Nicholas Koehler RideCo MVP</div>
+</div>
+
+<div class="display locations">
+    <div class="title">Locations</div>
+    <div class="help">
+        <mat-icon>help</mat-icon>
+        <div class="hint">
+            Click anywhere on the map to add a location.
+        </div>
+    </div>
+    <mat-list>
+        <div mat-list-item class="location" *ngFor="let location of locations">
+            <div class="text">{{location.title}}</div>
+            <div class="actions">
+                <button mat-icon-button (click)="moveToLocation(location)">
+                    <mat-icon>location_on</mat-icon>
+                </button>
+                <button mat-icon-button (click)="handleEditLocation(location)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="deleteLocation(location)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+    </mat-list>
+</div>
+
+<div id="map" class="map" (mousedown)="drag = false" (mousemove)="drag = true"
+    (mouseup)="handleSelectCoordinates($event)"></div>
