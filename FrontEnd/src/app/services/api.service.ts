@@ -9,25 +9,35 @@ import { MapLocationDto } from '../data/dto';
 })
 export class ApiService {
 
-  private readonly API = '';
+  private readonly API = 'http://localhost:8000/location/poi/';
 
   constructor(
     private http: HttpClient
   ) { }
 
   getLocations(): Observable<MapLocationDto[]> {
-    return this.http.get<MapLocationDto[]>(this.API + 'get');
+    return this.http.get<MapLocationDto[]>(this.API);
   }
 
-  addLocation(name: string, longitude: number, latitude: number): Observable<MapLocationDto> {
-    return this.http.post<MapLocationDto>(this.API + 'add?name=' + name + '&longitude=' + longitude + '&latitude=' + latitude, location);
+  addLocation(title: string, longitude: number, latitude: number): Observable<MapLocationDto> {
+    const request = {
+      title,
+      longitude,
+      latitude
+    };
+
+    return this.http.post<MapLocationDto>(this.API, request);
   }
 
-  deleteLocation(id: number): Observable<boolean> {
-    return this.http.delete<boolean>(this.API + 'delete?id=' + id);
+  deleteLocation(id: number): Observable<any> {
+    return this.http.delete(this.API + id + '/');
   }
 
-  editLocation(id: number, name: string): Observable<boolean> {
-    return this.http.post<boolean>(this.API + 'edit?id=' + id, name);
+  editLocation(id: number, title: string): Observable<any> {
+    const request = {
+      title
+    };
+
+    return this.http.patch(this.API + id + '/', request);
   }
 }

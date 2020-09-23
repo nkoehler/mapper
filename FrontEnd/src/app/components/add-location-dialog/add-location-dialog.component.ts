@@ -8,7 +8,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class AddLocationDialogComponent {
 
-  name: string;
+  title: string;
 
   constructor(
     public dialogRef: MatDialogRef<AddLocationDialogComponent, string>,

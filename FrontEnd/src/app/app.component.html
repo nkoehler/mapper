@@ -1,5 +1,7 @@
+<ngx-loading-bar color="#673ab7" [includeSpinner]="false"></ngx-loading-bar>
+
 <div class="display header">
-    <div class="text">Nicholas Koehler RideCo MVP</div>
+    <div class="text">Nicholas Koehler MVP</div>
 </div>
 
 <div class="display locations">
@@ -7,7 +9,7 @@
     <div class="help">
         <mat-icon>help</mat-icon>
         <div class="hint">
-            Click anywhere on the map to add a location.
+            Right-click anywhere on the map to add a location.
         </div>
     </div>
     <mat-list>
@@ -28,5 +30,4 @@
     </mat-list>
 </div>
 
-<div id="map" class="map" (mousedown)="drag = false" (mousemove)="drag = true"
-    (mouseup)="handleSelectCoordinates($event)"></div>
+<div id="map" class="map" (contextmenu)="handleSelectCoordinates($event)"></div>

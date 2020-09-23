@@ -4,7 +4,7 @@ import { Feature, Map, View } from 'ol';
 import { defaults as defaultControls } from 'ol/control';
 import ScaleLine from 'ol/control/ScaleLine';
 import { Coordinate } from 'ol/coordinate';
-import Circle from 'ol/geom/Circle';
+import Geometry from 'ol/geom/Geometry';
 import Point from 'ol/geom/Point';
 import { defaults as defaultInteractions, PinchZoom } from 'ol/interaction';
 import TileLayer from 'ol/layer/Tile';
@@ -18,10 +18,9 @@ import Style from 'ol/style/Style';
 import Text from 'ol/style/Text';
 
 import { AddLocationDialogComponent } from './components/add-location-dialog/add-location-dialog.component';
-import { ApiService } from './services/api.service';
-import { MapLocation } from './data/interfaces';
-import { MapLocationDto } from './data/dto';
 import { EditLocationDialogComponent } from './components/edit-location-dialog/edit-location-dialog.component';
+import { MapLocation } from './data/interfaces';
+import { ApiService } from './services/api.service';
 
 @Component({
   selector: 'app-root',
@@ -31,8 +30,6 @@ import { EditLocationDialogComponent } from './components/edit-location-dialog/e
 export class AppComponent implements AfterViewInit {
   latitude: number = 43.466667;
   longitude: number = -80.516670;
-
-  drag = false;
 
   rasterLayer: TileLayer;
   pointSource: VectorSource;
@@ -51,7 +48,10 @@ export class AppComponent implements AfterViewInit {
       source: new OSM()
     });
 
-    this.pointSource = new VectorSource({});
+    this.pointSource = new VectorSource({
+      loader: () => this.getLocations()
+    });
+
     this.pointLayer = new VectorLayer({
       source: this.pointSource,
     });
@@ -79,102 +79,74 @@ export class AppComponent implements AfterViewInit {
   }
 
   handleSelectCoordinates(event: MouseEvent): void {
-    if (this.drag) {
-      return;
-    }
+    event.preventDefault();
 
-    const coordinates = this.map.getEventCoordinate(event);
+    const coordinate = this.map.getEventCoordinate(event);
 
     this.dialog.open(AddLocationDialogComponent).afterClosed().subscribe({
-      next: (name: string) => {
-        if (name) {
-          this.addLocation(coordinates, name);
+      next: (title: string) => {
+        if (title) {
+          this.addLocation(coordinate, title);
         }
       }
     });
   }
 
+  addLocation(coordinate: Coordinate, title: string): void {
+    const longitude = +coordinate[0].toFixed(9);
+    const latitude = +coordinate[1].toFixed(9);
 
-  addLocation(coordinate: Coordinate, name: string): void {
-    const feature = new Feature();
-    feature.setGeometry(new Point(coordinate));
-    feature.setStyle(this.getStyle(coordinate, name));
+    this.apiService.addLocation(title, longitude, latitude).subscribe({
+      next: data => {
+        const feature = new Feature();
+        feature.setGeometry(this.getGeometry(coordinate));
+        feature.setStyle(this.getStyle(title));
 
-    // REMOVE
-    const location: MapLocation = {
-      id: null,
-      title: name,
-      longitude: coordinate[0],
-      latitude: coordinate[1],
-      feature: feature
-    };
-    this.pointSource.addFeature(feature);
-    this.locations.push(location);
-    /*
-        this.apiService.addLocation(name, coordinate[0], coordinate[1]).subscribe({
-          next: data => {
-            const location: MapLocation = {
-              id: data.id,
-              title: data.title,
-              longitude: data.longitude,
-              latitude: data.latitude,
-              feature: feature
-            };
-    
-            this.pointSource.addFeature(location.feature);
-            this.locations.push(location);
-          },
-          error: err => alert('Unable to add location!')
-        });*/
+        const location: MapLocation = {
+          id: data.id,
+          title: data.title,
+          longitude: data.longitude,
+          latitude: data.latitude,
+          feature: feature
+        };
+
+        this.pointSource.addFeature(location.feature);
+        this.locations.push(location);
+      },
+      error: () => alert('Unable to add location!')
+    });
   }
 
   deleteLocation(location: MapLocation) {
-    this.locations.splice(this.locations.indexOf(location), 1);
-    this.pointSource.removeFeature(location.feature);
-    /*
-        this.apiService.removeLocation(location.id).subscribe({
-          next: (success) => {
-            if (success) {
-              this.locations.splice(this.locations.indexOf(location));
-              this.pointSource.removeFeature(location.feature);
-            } else {
-              alert('Unable to delete location!');
-            }
-          },
-          error: err => alert('Unable to delete location!')
-        });*/
+    this.apiService.deleteLocation(location.id).subscribe({
+      next: () => {
+        const index = this.locations.findIndex(x => x.id === location.id);
+        this.locations.splice(index, 1);
+        this.pointSource.removeFeature(location.feature);
+      },
+      error: () => alert('Unable to delete location!')
+    });
   }
 
   handleEditLocation(location: MapLocation) {
     this.dialog.open(EditLocationDialogComponent, { data: location.title }).afterClosed().subscribe({
-      next: (name: string) => {
-        if (name) {
-          this.editLocation(location, name);
+      next: (title: string) => {
+        if (title) {
+          this.editLocation(location, title);
         }
       }
     });
   }
 
-  editLocation(location: MapLocation, name: string) {
-    const index = this.locations.indexOf(location);
-    const coordinate: Coordinate = [location.longitude, location.latitude];
-    this.locations[index].title = name;
-    this.locations[index].feature.setStyle(this.getStyle(coordinate, name));
-
-    /*
-        this.apiService.editLocation(location.id, name).subscribe({
-          next: (success) => {
-            if (success) {
-              const index = this.locations.indexOf(location);
-              const coordinate: Coordinate = [location.longitude, location.latitude];
-              this.locations[index].title = name;
-              this.locations[index].feature.setStyle(this.getStyle(coordinate, name)
-            } else {
-              alert('Unable to edit location!');
-            }
-          },
-          error: err => alert('Unable to edit location!')
-        });*/
+  editLocation(location: MapLocation, title: string) {
+    this.apiService.editLocation(location.id, title).subscribe({
+      next: () => {
+        const index = this.locations.indexOf(location);
+        this.locations[index].title = title;
+        this.locations[index].feature.setStyle(this.getStyle(title));
+      },
+      error: () => alert('Unable to edit location!')
+    });
   }
 
   moveToLocation(location: MapLocation): void {
@@ -184,17 +156,48 @@ export class AppComponent implements AfterViewInit {
     view.setCenter(coordinate);
   }
 
-  private getStyle(coordinate: Coordinate, name: string): Style {
+  private getLocations(): void {
+    this.apiService.getLocations().subscribe({
+      next: locations => {
+        this.locations = locations.map(x => {
+          const coordinate: Coordinate = [x.longitude, x.latitude];
+
+          const feature = new Feature();
+          feature.setGeometry(this.getGeometry(coordinate));
+          feature.setStyle(this.getStyle(x.title));
+
+          const location: MapLocation = {
+            id: x.id,
+            title: x.title,
+            longitude: x.longitude,
+            latitude: x.latitude,
+            feature: feature
+          };
+
+          return location;
+        });
+
+        this.pointSource.addFeatures(this.locations.map(x => x.feature));
+      },
+      error: () => alert('Unable to load locations!')
+    });
+  }
+
+  private getGeometry(coordinate: Coordinate): Geometry {
+    return new Point(coordinate);
+  }
+
+  private getStyle(title: string): Style {
     return new Style({
-      geometry: new Circle(coordinate, 30),
       stroke: new Stroke({ color: '#673ab7' }),
       fill: new Fill({ color: '#673ab7' }),
       text: new Text({
-        offsetY: 20,
         font: 'bold 18px "Open Sans"',
         placement: 'point',
-        fill: new Fill({ color: 'black' }),
-        text: name
+        fill: new Fill({ color: 'white' }),
+        text: title,
+        padding: [5, 5, 5, 5],
+        backgroundFill: new Fill({ color: '#673ab7' }),
       })
     });
   }

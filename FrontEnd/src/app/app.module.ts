@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,10 +9,11 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LoadingBarModule } from '@ngx-loading-bar/core';
+import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 
 import { AppComponent } from './app.component';
 import { AddLocationDialogComponent } from './components/add-location-dialog/add-location-dialog.component';
-import { HttpClientModule } from '@angular/common/http';
 import { EditLocationDialogComponent } from './components/edit-location-dialog/edit-location-dialog.component';
 
 @NgModule({
@@ -31,6 +33,8 @@ import { EditLocationDialogComponent } from './components/edit-location-dialog/e
     MatInputModule,
     MatDialogModule,
     MatTableModule,
+    LoadingBarModule,
+    LoadingBarHttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
