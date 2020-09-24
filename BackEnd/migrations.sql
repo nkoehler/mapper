@@ -2,7 +2,6 @@
 
 CREATE TABLE "location_maplocation"(
     "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, 
-    "title" varchar
-(256) NOT NULL, 
+    "title" varchar(256) NOT NULL, 
     "longitude" decimal NOT NULL, 
     "latitude" decimal NOT NULL);
