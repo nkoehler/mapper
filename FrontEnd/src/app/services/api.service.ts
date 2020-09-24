@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 import { MapLocationDto } from '../data/dto';
 
@@ -9,7 +10,9 @@ import { MapLocationDto } from '../data/dto';
 })
 export class ApiService {
 
-  private readonly API = 'http://localhost:8000/location/poi/';
+  private readonly API = environment.production
+    ? 'https://nkoehler-mapper-api.azurewebsites.net/location/poi/'
+    : 'http://localhost:8000/location/poi/';
 
   constructor(
     private http: HttpClient

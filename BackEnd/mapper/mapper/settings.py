@@ -20,12 +20,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# Would typically move this to a configuration file but it's just an MVP
 SECRET_KEY = '^@&cpn=w54%mpe@n-p8tn9cu)vaqexbxxatkcyyhh7miw8cjtr'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'nkoehler-mapper-web.azurewebsites.net'
+]
 
 
 # Application definition
@@ -128,7 +131,9 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = False
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:4200',
+    'https://nkoehler-mapper-web.azurewebsites.net'
 ]  # If this is used, then not need to use `CORS_ORIGIN_ALLOW_ALL = True`
 CORS_ORIGIN_REGEX_WHITELIST = [
     'http://localhost:4200',
+    'https://nkoehler-mapper-web.azurewebsites.net'
 ]

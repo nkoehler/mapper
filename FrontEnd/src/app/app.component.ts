@@ -98,9 +98,7 @@ export class AppComponent implements AfterViewInit {
 
     this.apiService.addLocation(title, longitude, latitude).subscribe({
       next: data => {
-        const feature = new Feature();
-        feature.setGeometry(this.getGeometry(coordinate));
-        feature.setStyle(this.getStyle(title));
+        const feature = this.buildFeature(coordinate, title);
 
         const location: MapLocation = {
           id: data.id,
@@ -162,9 +160,7 @@ export class AppComponent implements AfterViewInit {
         this.locations = locations.map(x => {
           const coordinate: Coordinate = [x.longitude, x.latitude];
 
-          const feature = new Feature();
-          feature.setGeometry(this.getGeometry(coordinate));
-          feature.setStyle(this.getStyle(x.title));
+          const feature = this.buildFeature(coordinate, x.title);
 
           const location: MapLocation = {
             id: x.id,
@@ -181,6 +177,13 @@ export class AppComponent implements AfterViewInit {
       },
       error: () => alert('Unable to load locations!')
     });
+  }
+
+  private buildFeature(coordinate: Coordinate, title: string): Feature {
+    const feature = new Feature();
+    feature.setGeometry(this.getGeometry(coordinate));
+    feature.setStyle(this.getStyle(title));
+    return feature;
   }
 
   private getGeometry(coordinate: Coordinate): Geometry {

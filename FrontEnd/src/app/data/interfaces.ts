@@ -1,4 +1,4 @@
-import { Feature } from "ol";
+import { Feature } from 'ol';
 
 export interface MapLocation {
     id: number;
