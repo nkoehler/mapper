@@ -27,7 +27,7 @@ SECRET_KEY = '^@&cpn=w54%mpe@n-p8tn9cu)vaqexbxxatkcyyhh7miw8cjtr'
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'nkoehler-mapper-web.azurewebsites.net'
+    '*'
 ]
 
 
