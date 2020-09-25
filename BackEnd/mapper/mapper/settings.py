@@ -27,7 +27,9 @@ SECRET_KEY = '^@&cpn=w54%mpe@n-p8tn9cu)vaqexbxxatkcyyhh7miw8cjtr'
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    '*'
+    'http://localhost:4200',
+    'https://nkoehler-mapper-website.azurewebsites.net'
+    'https://nkoehler-mapper-api.azurewebsites.net'
 ]
 
 
@@ -131,9 +133,9 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = False
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:4200',
-    'https://nkoehler-mapper-web.azurewebsites.net'
+    'https://nkoehler-mapper-website.azurewebsites.net'
 ]  # If this is used, then not need to use `CORS_ORIGIN_ALLOW_ALL = True`
 CORS_ORIGIN_REGEX_WHITELIST = [
     'http://localhost:4200',
-    'https://nkoehler-mapper-web.azurewebsites.net'
+    'https://nkoehler-mapper-website.azurewebsites.net'
 ]
