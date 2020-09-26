@@ -34,16 +34,16 @@ All source code, assets, and schemas are included in this repository.
 Download repository and extract to an accessible location. Ensure python and npm package manager is installed.
 
 **Front end**
-- cd FrontEnd
-- npm install
-- npm start
-- Browse localhost:4200
+1. cd FrontEnd
+2. npm install
+3. npm start
+4. Browse localhost:4200
 
 **Back end**
-- cd BackEnd\mapper
-- pip install -r requirements.txt
-- python manage.py runserver
-- Browse localhost:8000/location/poi/
+1. cd BackEnd\mapper
+2. pip install -r requirements.txt
+3. python manage.py runserver
+4. Browse localhost:8000/location/poi/
 
 # Feature Wishlist
 If there was more time, these are a few things I might add.
