@@ -1,4 +1,4 @@
-# Mapper - MVP For RideCo - Nicholas Koehler
+# Mapper - MVP for RideCo - Nicholas Koehler
 This is an application that allows you to create, edit, and delete points of interest on a map.
 
 Live Demo: https://nkoehler-mapper-website.azurewebsites.net/
