@@ -17,6 +17,8 @@ Live Demo: https://nkoehler-mapper-website.azurewebsites.net/
 # Limitations
 This is an MVP.  As such, there were many shortcuts taken in the interest of speed.  Here are some shortcomings and how I would address them for a real production scenario.
 
+**Code Safety**: Shortcuts were taken when calling functions/methods that may not always return success (ex. indexOf, etc.).  In production, the return values would be properly checked and verified before proceeding.
+
 **Security**: Secret keys, passwords, and configuration data are plain text.  In production, these would be protected by a configuration vault or some other secure means of passing this data to the application.
 
 **Scalability**: Thousands of simultaneous requests would slow down the system.  In production, the backend would use caching where possible and would only select the columns needed from the table.
