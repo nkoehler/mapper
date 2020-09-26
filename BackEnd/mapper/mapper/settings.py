@@ -24,12 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '^@&cpn=w54%mpe@n-p8tn9cu)vaqexbxxatkcyyhh7miw8cjtr'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
-    'http://localhost:4200',
-    'https://nkoehler-mapper-website.azurewebsites.net'
-    'https://nkoehler-mapper-api.azurewebsites.net'
+    '*'
 ]
 
 
@@ -84,8 +82,12 @@ WSGI_APPLICATION = 'mapper.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'mapper',
+        'USER': 'nkoehler@nkoehler-mapper-db',
+        'PASSWORD': 'mapper123*',
+        'HOST': 'nkoehler-mapper-db.postgres.database.azure.com',
+        'PORT': '',
     }
 }
 
@@ -129,13 +131,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # If this is used then `CORS_ORIGIN_WHITELIST` will not have any effect
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:4200',
-    'https://nkoehler-mapper-website.azurewebsites.net'
-]  # If this is used, then not need to use `CORS_ORIGIN_ALLOW_ALL = True`
-CORS_ORIGIN_REGEX_WHITELIST = [
-    'http://localhost:4200',
-    'https://nkoehler-mapper-website.azurewebsites.net'
+
 ]

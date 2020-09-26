@@ -1,6 +1,5 @@
 #! /bin/bash
 
-cd site/wwwroot
-source venv/bin/activate
-python -m pip install requirements.txt
+cd /home/site/wwwroot
+pip install -r requirements.txt
 gunicorn --bind=0.0.0.0 --timeout 600 mapper.wsgi
